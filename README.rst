@@ -8,19 +8,14 @@ salt-broker is a lightweight proxy for `saltstack <https://github.com/saltstack/
 How to use it?
 =====================
 
-Install Requirements
----------------------
-
-.. code-block:: bash
-
-    pip install -r requirements.txt
-
 Install salt-broker
----------------------
+-------------------
+
+* PIP
 
 .. code-block:: bash
 
-    python setup.py install
+    pip install salt-broker
 
 Config salt-broker
 -------------------
