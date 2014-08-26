@@ -8,17 +8,32 @@ salt-broker is a lightweight proxy for `saltstack <https://github.com/saltstack/
 How to use it?
 =====================
 
-Install zeroMQ
------------------
+Install Requirements
+---------------------
+
+.. code-block:: bash
+
+    pip install -r requirements.txt
+
+Install salt-broker
+---------------------
+
+.. code-block:: bash
+
+    python setup.py install
 
 Config salt-broker
 -------------------
 
-change the 'master' address in 'salt-broker.py'
+* /etc/salt/broker
+
+.. code-block:: yaml
+
+    master: salt-master.example.com
 
 Start salt-broker
 -------------------
 
 .. code-block:: bash
 
-    python salt-broker.py
+    salt-broker -d
