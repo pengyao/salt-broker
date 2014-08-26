@@ -1,0 +1,7 @@
+/build
+*.py[co]
+*.swp
+*.DS_Store
+
+# setuptools stuff
+*.egg-info
