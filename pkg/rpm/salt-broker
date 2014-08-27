@@ -18,7 +18,7 @@
 
 # chkconfig header
 
-# chkconfig: - 100 100 
+# chkconfig: 235 95 05 
 # description:   This is a lightweight proxy for salt
 #
 # processname: /usr/bin/salt-broker
