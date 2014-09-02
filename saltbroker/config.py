@@ -21,7 +21,7 @@ DEFAULT_BROKER_OPTS = {
     'publish_port': '4505',
     'ipv6': False,
     'user': 'root',
-    'conf_file': os.path.join(salt.syspaths.CONFIG_DIR, 'minion'),
+    'conf_file': os.path.join(salt.syspaths.CONFIG_DIR, 'broker'),
     'log_file': os.path.join(salt.syspaths.LOGS_DIR, 'broker'),
     'log_level': None,
     'log_datefmt': _DFLT_LOG_DATEFMT,
