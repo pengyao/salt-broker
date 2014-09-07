@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 NAME = 'salt-broker'
 DESCRIPTION = 'A lightweight proxy for saltstack'
-VERSION = '0.2.0'
+VERSION = '0.2.1'
 AUTHOR = 'pengyao'
 AUTHOR_EMAIL = 'pengyao@pengyao.org'
 COPYRIGHT = 'Copyright © 2014 ' + AUTHOR
