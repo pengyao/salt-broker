@@ -14,6 +14,9 @@ import zmq
 import salt.minion
 import salt.utils
 
+# Import saltbroker utils
+from saltbroker.utils import appendproctitle
+
 log = logging.getLogger(__name__)
 
 class PubBroker(multiprocessing.Process):
@@ -31,6 +34,7 @@ class PubBroker(multiprocessing.Process):
 
         http://zguide.zeromq.org/py:wuproxy
         '''
+        appendproctitle(self.__class__.__name__)
         context = zmq.Context()
 
         # Set up a master SUB sock
@@ -56,6 +60,7 @@ class PubBroker(multiprocessing.Process):
                 message = sub_sock.recv_multipart()
                 pub_sock.send_multipart(message)
         except KeyboardInterrupt:
+            log.warn('Stopping the PubBorker')
             if sub_sock.closed is False:
                 sub_sock.setsockopt(zmq.LINGER, 1)
                 sub_sock.close()
@@ -81,6 +86,7 @@ class RetBroker(multiprocessing.Process):
 
         http://zguide.zeromq.org/py:msgqueue
         '''
+        appendproctitle(self.__class__.__name__)
         context = zmq.Context()
 
         # Set up a router sock to receive results from minions
@@ -104,6 +110,7 @@ class RetBroker(multiprocessing.Process):
             # Forward all results
             zmq.device(zmq.QUEUE, router_sock, dealer_sock)
         except KeyboardInterrupt:
+            log.warn('Stopping the RetBroker')
             if router_sock.closed is False:
                 router_sock.setsockopt(zmq.LINGER, 1)
                 router_sock.close()
@@ -129,6 +136,7 @@ class Broker(object):
         '''
         Turn on broker components
         '''
+        appendproctitle('MainProcess')
         log.info(
             'salt-broker is starting as user {0!r}'.format(
                 salt.utils.get_user())
