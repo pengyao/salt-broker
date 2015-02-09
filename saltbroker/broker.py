@@ -6,6 +6,7 @@ A lightweight proxy for saltstack
 # Import python libs
 import logging
 import multiprocessing
+import signal
 
 # Import third party libs
 import zmq
@@ -13,9 +14,10 @@ import zmq
 # Import salt libs
 import salt.minion
 import salt.utils
+from salt.utils.debug import enable_sigusr1_handler
 
 # Import saltbroker utils
-from saltbroker.utils import appendproctitle
+from saltbroker.utils import appendproctitle, clean_proc
 
 log = logging.getLogger(__name__)
 
@@ -41,14 +43,14 @@ class PubBroker(multiprocessing.Process):
         master_pub = 'tcp://{0}:{1}'.format(self.opts['master_ip'],
                                             self.opts['publish_port'])
         sub_sock = context.socket(zmq.SUB)
-        log.info('Starting set up a broker SUB sock on {0}'.format(master_pub))
+        log.debug('Starting set up a broker SUB sock on {0}'.format(master_pub))
         sub_sock.connect(master_pub)
 
         # Set up a broker PUB sock
         pub_uri = 'tcp://{0}:{1}'.format(self.opts['interface'],
                                          self.opts['publish_port'])
         pub_sock = context.socket(zmq.PUB)
-        log.info('Starting set up a broker PUB sock on {0}'.format(pub_uri))
+        log.debug('Starting set up a broker PUB sock on {0}'.format(pub_uri))
         pub_sock.bind(pub_uri)
 
         # Subscribe everything from master
@@ -140,10 +142,23 @@ class Broker(object):
             'salt-broker is starting as user {0!r}'.format(
                 salt.utils.get_user())
         )
-        log.info('starting pub broker......')
-        self.pub_broker = PubBroker(self.opts)
-        self.pub_broker.start()
-        log.info('starting ret broker......')
-        self.ret_broker = RetBroker(self.opts)
-        self.ret_broker.start()
+        enable_sigusr1_handler()
 
+        log.info('starting pub broker......')
+        pub_broker = PubBroker(self.opts)
+        pub_broker.start()
+        log.info('starting ret broker......')
+        ret_broker = RetBroker(self.opts)
+        ret_broker.start()
+
+        def sigterm_clean(signum, frame):
+            '''
+            Clean broker processes when a SIGTERM is encountered.
+
+            From: https://github.com/saltstack/salt/blob/v2014.1.13/salt/master.py#L470
+            '''
+            log.warn('Caught signal {0}, stopping salt-broker'.format(signum))
+            clean_proc(pub_broker)
+            clean_proc(ret_broker)
+
+        signal.signal(signal.SIGTERM, sigterm_clean)
