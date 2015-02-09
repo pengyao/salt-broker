@@ -136,7 +136,6 @@ class Broker(object):
         '''
         Turn on broker components
         '''
-        appendproctitle('MainProcess')
         log.info(
             'salt-broker is starting as user {0!r}'.format(
                 salt.utils.get_user())
