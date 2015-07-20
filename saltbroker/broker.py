@@ -18,6 +18,7 @@ from salt.utils.debug import enable_sigusr1_handler
 
 # Import saltbroker utils
 from saltbroker.utils import appendproctitle, clean_proc
+from saltbroker.utils.zeromq import set_tcp_keepalive
 
 log = logging.getLogger(__name__)
 
@@ -43,6 +44,8 @@ class PubBroker(multiprocessing.Process):
         master_pub = 'tcp://{0}:{1}'.format(self.opts['master_ip'],
                                             self.opts['publish_port'])
         sub_sock = context.socket(zmq.SUB)
+        sub_sock = set_tcp_keepalive(sub_sock,
+                                     opts=self.opts)
         log.debug('Starting set up a broker SUB sock on {0}'.format(master_pub))
         sub_sock.connect(master_pub)
 
@@ -50,6 +53,8 @@ class PubBroker(multiprocessing.Process):
         pub_uri = 'tcp://{0}:{1}'.format(self.opts['interface'],
                                          self.opts['publish_port'])
         pub_sock = context.socket(zmq.PUB)
+        pub_sock = set_tcp_keepalive(pub_sock,
+                                     opts=self.opts)
         log.debug('Starting set up a broker PUB sock on {0}'.format(pub_uri))
         pub_sock.bind(pub_uri)
 
@@ -95,12 +100,16 @@ class RetBroker(multiprocessing.Process):
         router_uri = 'tcp://{0}:{1}'.format(self.opts['interface'],
                                             self.opts['ret_port'])
         router_sock = context.socket(zmq.ROUTER)
+        router_sock = set_tcp_keepalive(router_sock,
+                                        opts=self.opts)
         log.info(
             'Starting set up a broker ROUTER sock on {0}'.format(router_uri))
         router_sock.bind(router_uri)
 
         # Set up a dealer sock to send results to master ret interface
         dealer_sock = context.socket(zmq.DEALER)
+        dealer_sock = set_tcp_keepalive(dealer_sock,
+                                        opts=self.opts)
         self.opts['master_uri'] = 'tcp://{0}:{1}'.format(self.opts['master_ip'],
                                                       self.opts['ret_port'])
         log.info(
