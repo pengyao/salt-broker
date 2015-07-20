@@ -31,6 +31,10 @@ DEFAULT_BROKER_OPTS = {
     'log_granular_levels': {},
     'extension_modules': '',
     'pidfile': os.path.join(salt.syspaths.PIDFILE_DIR, 'salt-broker.pid'),
+    'tcp_keepalive': 1,
+    'tcp_keepalive_idle': 300,
+    'tcp_keepalive_cnt': -1,
+    'tcp_keepalive_intvl': -1,
 }
 
 def broker_config(path, env_var='SALT_BROKER_CONFIG', defaults=None):
