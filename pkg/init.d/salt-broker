@@ -8,17 +8,14 @@
 ### BEGIN INIT INFO
 # Provides:          salt-broker
 # Required-Start:    $all
-# Required-Stop:     
+# Required-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Salt broker, a lightweight proxy for saltstack
-# Description:       This is a lightweight proxy for salt 
+# Description:       This is a lightweight proxy for salt
 ### END INIT INFO
 
 
-# chkconfig header
-
-# chkconfig: 235 95 05 
 # description:   This is a lightweight proxy for salt
 #
 # processname: /usr/bin/salt-broker
@@ -27,9 +24,10 @@
 DEBIAN_VERSION=/etc/debian_version
 SUSE_RELEASE=/etc/SuSE-release
 # Source function library.
-if [ -f $DEBIAN_VERSION ]; then
-   break   
-elif [ -f $SUSE_RELEASE -a -r /etc/rc.status ]; then
+if [[ -f $DEBIAN_VERSION ]]; then
+   LOCKFILE="/var/run/salt-broker.lock"
+   break
+elif [[ -f $SUSE_RELEASE && -r /etc/rc.status ]]; then
     . /etc/rc.status
 else
     . /etc/rc.d/init.d/functions
@@ -40,8 +38,8 @@ SALTBROKER=/usr/bin/salt-broker
 PYTHON=/usr/bin/python
 SYNDIC_ARGS=""
 
-if [ -f /etc/default/salt ]; then
-    . /etc/default/salt
+if [[ -f /etc/default/salt-broker ]]; then
+    . /etc/default/salt-broker
 fi
 
 SERVICE=salt-broker
@@ -51,14 +49,15 @@ RETVAL=0
 
 start() {
     echo -n $"Starting salt-broker daemon: "
-    if [ -f $SUSE_RELEASE ]; then
+    if [[ -f $SUSE_RELEASE ]]; then
         startproc -f -p /var/run/$SERVICE.pid $SALTBROKER -d $SYNDIC_ARGS
         rc_status -v
-    elif [ -e $DEBIAN_VERSION ]; then
-        if [ -f $LOCKFILE ]; then
+    elif [[ -e $DEBIAN_VERSION ]]; then
+        if [[ -f $LOCKFILE ]]; then
             echo -n "already started, lock file found" 
             RETVAL=1
         elif $PYTHON $SALTBROKER -d $SYNDIC_ARGS >& /dev/null; then
+            touch $LOCKFILE
             echo -n "OK"
             RETVAL=0
         fi
@@ -78,6 +77,7 @@ stop() {
     elif [ -f $DEBIAN_VERSION ]; then
         # Added this since Debian's start-stop-daemon doesn't support spawned processes
         if ps -ef | grep "$PYTHON $SALTBROKER" | grep -v grep | awk '{print $2}' | xargs kill &> /dev/null; then
+            rm -f $LOCKFILE
             echo -n "OK"
             RETVAL=0
         else
