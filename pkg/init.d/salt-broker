@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Salt broker
 ###################################
@@ -26,7 +26,6 @@ SUSE_RELEASE=/etc/SuSE-release
 # Source function library.
 if [[ -f $DEBIAN_VERSION ]]; then
    LOCKFILE="/var/run/salt-broker.lock"
-   break
 elif [[ -f $SUSE_RELEASE && -r /etc/rc.status ]]; then
     . /etc/rc.status
 else
