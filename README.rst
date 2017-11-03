@@ -15,7 +15,7 @@ Install salt-broker
 
 .. code-block:: bash
 
-	#for el6
+    #for el6
     rpm -ivh salt-broker-2016.11.4-1.el6.noarch.rpm
     #for el7
     rpm -ivh salt-broker-2016.11.4-1.el7.noarch.rpm
