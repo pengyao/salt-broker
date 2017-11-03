@@ -11,11 +11,14 @@ How to use it?
 Install salt-broker
 -------------------
 
-* PIP
+* RPM
 
 .. code-block:: bash
 
-    pip install salt-broker
+	#for el6
+    rpm -ivh salt-broker-2016.11.4-1.el6.noarch.rpm
+    #for el7
+    rpm -ivh salt-broker-2016.11.4-1.el7.noarch.rpm
 
 Config salt-broker
 -------------------
@@ -31,4 +34,4 @@ Start salt-broker
 
 .. code-block:: bash
 
-    salt-broker -d
+    service salt-broker start

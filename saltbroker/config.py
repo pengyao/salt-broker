@@ -35,6 +35,7 @@ DEFAULT_BROKER_OPTS = {
     'tcp_keepalive_idle': 300,
     'tcp_keepalive_cnt': -1,
     'tcp_keepalive_intvl': -1,
+    'verify_env': True,
 }
 
 def broker_config(path, env_var='SALT_BROKER_CONFIG', defaults=None):
