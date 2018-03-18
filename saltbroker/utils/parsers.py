@@ -5,13 +5,13 @@ import os
 
 # Import salt libs
 from salt.utils.parsers import OptionParserMeta, OptionParser, ConfigDirMixIn, \
-    LogLevelMixIn, RunUserMixin, DaemonMixIn, PidfileMixin
+    LogLevelMixIn, RunUserMixin, DaemonMixIn
 import salt.syspaths as syspaths
 
 import saltbroker.config as config
 
 class BrokerOptionParser(OptionParser, ConfigDirMixIn, LogLevelMixIn,
-    RunUserMixin, DaemonMixIn, PidfileMixin):
+    RunUserMixin, DaemonMixIn):
 
     __metaclass__ = OptionParserMeta
 
