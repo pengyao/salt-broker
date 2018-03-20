@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 REQUIREMENTS = [
     'pyzmq>=2.2.0',
-    'salt>=2014.1.0',
+    'salt>=2016.11.4',
     'setproctitle'
 ]
 
